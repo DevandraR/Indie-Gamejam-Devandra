@@ -1,0 +1,71 @@
+[gd_scene load_steps=8 format=3 uid="uid://ly11ylw3w4ep"]
+
+[ext_resource type="Script" path="res://scripts/player_ship.gd" id="1_6jnek"]
+[ext_resource type="Texture2D" uid="uid://xe4gn8lkrj40" path="res://assets/warship-enhanced.png" id="1_kvc8m"]
+[ext_resource type="Script" path="res://scripts/turret_movement.gd" id="3_clghd"]
+[ext_resource type="Texture2D" uid="uid://b02kgu1tbqypb" path="res://assets/turret_body-removebg.png" id="3_w6n4s"]
+[ext_resource type="Texture2D" uid="uid://bpyjfiuak3pi2" path="res://assets/turret_barrel-removebg.png" id="4_h0vak"]
+[ext_resource type="PackedScene" uid="uid://b4hr7qji43brn" path="res://scenes/Bullet.tscn" id="6_yc6xa"]
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_vdypn"]
+particle_flag_disable_z = true
+emission_shape = 1
+emission_sphere_radius = 5.0
+direction = Vector3(-1, 0, 0)
+spread = 15.0
+initial_velocity_min = 50.0
+initial_velocity_max = 100.0
+gravity = Vector3(0, 0, 0)
+scale_min = 5.0
+scale_max = 10.0
+color = Color(0.8, 0.95, 1, 0.6)
+
+[node name="PlayerShip" type="Area2D"]
+position = Vector2(-11, -9)
+script = ExtResource("1_6jnek")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(71, -13)
+scale = Vector2(0.75, 0.75)
+texture = ExtResource("1_kvc8m")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+position = Vector2(-34, -37)
+polygon = PackedVector2Array(194, -2, 246, 1, 289, 7, 325, 15, 346, 21, 357, 25, 362, 29, 365, 34, 362, 40, 356, 44, 346, 49, 326, 57, 289, 65, 247, 70, 196, 71, -57, 70, -170, 67, -175, 46, -175, 23, -168, 1, -55, -3)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position_smoothing_enabled = true
+rotation_smoothing_enabled = true
+
+[node name="WakeEffect" type="GPUParticles2D" parent="."]
+position = Vector2(-213, -15)
+amount = 100
+process_material = SubResource("ParticleProcessMaterial_vdypn")
+lifetime = 1.5
+preprocess = 0.5
+
+[node name="WakeEffect2" type="GPUParticles2D" parent="."]
+position = Vector2(-213, 12)
+amount = 100
+process_material = SubResource("ParticleProcessMaterial_vdypn")
+lifetime = 1.5
+preprocess = 0.5
+
+[node name="Turret" type="Node2D" parent="."]
+position = Vector2(251, -1)
+script = ExtResource("3_clghd")
+
+[node name="TurretBody" type="Sprite2D" parent="Turret"]
+position = Vector2(2, -1)
+scale = Vector2(0.05, 0.05)
+texture = ExtResource("3_w6n4s")
+
+[node name="TurretBarrel" type="Sprite2D" parent="Turret"]
+position = Vector2(11, 4)
+rotation = 1.5708
+scale = Vector2(0.03003, 0.0350988)
+texture = ExtResource("4_h0vak")
+
+[node name="Bullet" parent="Turret" instance=ExtResource("6_yc6xa")]
+position = Vector2(-2, -78)
+scale = Vector2(3.5, 3.5)

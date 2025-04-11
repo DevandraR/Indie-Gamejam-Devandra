@@ -1,0 +1,29 @@
+[gd_scene load_steps=6 format=3 uid="uid://d2c1bulas8l3v"]
+
+[ext_resource type="Script" path="res://scripts/infinite_background.gd" id="1_cix6i"]
+[ext_resource type="Texture2D" uid="uid://bmok4ccxnhsg6" path="res://assets/sea_bg_7.png" id="1_f7rgt"]
+[ext_resource type="PackedScene" uid="uid://ly11ylw3w4ep" path="res://scenes/Player_Ship.tscn" id="2_irpxc"]
+[ext_resource type="Script" path="res://scripts/enemy_spawner.gd" id="4_e6eof"]
+[ext_resource type="PackedScene" path="res://scenes/HUD.tscn" id="5_tx752"]
+
+[node name="MainBg" type="Node"]
+script = ExtResource("1_cix6i")
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_mirroring = Vector2(1920, 1080)
+
+[node name="TextureRect" type="TextureRect" parent="ParallaxBackground/ParallaxLayer"]
+offset_right = 1920.0
+offset_bottom = 1080.0
+texture = ExtResource("1_f7rgt")
+stretch_mode = 1
+
+[node name="PlayerShip" parent="." instance=ExtResource("2_irpxc")]
+position = Vector2(551, 314)
+
+[node name="EnemySpawner" type="Node" parent="."]
+script = ExtResource("4_e6eof")
+
+[node name="HUD" parent="." instance=ExtResource("5_tx752")]

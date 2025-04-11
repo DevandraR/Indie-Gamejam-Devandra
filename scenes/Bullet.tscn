@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=3 uid="uid://b4hr7qji43brn"]
+
+[ext_resource type="Texture2D" uid="uid://qu4e3xfst3s3" path="res://assets/bullet-removebg.png" id="1_3nedn"]
+[ext_resource type="Script" path="res://scripts/bullet.gd" id="1_csh6m"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_sx75j"]
+radius = 2.0
+height = 10.0
+
+[node name="Bullet" type="Area2D"]
+script = ExtResource("1_csh6m")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_sx75j")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.045, 0.045)
+texture = ExtResource("1_3nedn")

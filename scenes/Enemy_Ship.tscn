@@ -1,0 +1,101 @@
+[gd_scene load_steps=10 format=3 uid="uid://doo6x1w6y5eed"]
+
+[ext_resource type="Script" path="res://scripts/enemy_ship.gd" id="1_abefa"]
+[ext_resource type="Texture2D" uid="uid://hes0j2p7gy7c" path="res://assets/enemy_boat-enhanced.png" id="1_tryvq"]
+[ext_resource type="Texture2D" uid="uid://b02kgu1tbqypb" path="res://assets/turret_body-removebg.png" id="2_icetq"]
+[ext_resource type="Script" path="res://scripts/enemy_turret.gd" id="2_iliux"]
+[ext_resource type="Texture2D" uid="uid://bpyjfiuak3pi2" path="res://assets/turret_barrel-removebg.png" id="3_h1uny"]
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_vdypn"]
+particle_flag_disable_z = true
+emission_shape = 1
+emission_sphere_radius = 5.0
+spread = 15.0
+initial_velocity_min = 50.0
+initial_velocity_max = 100.0
+gravity = Vector3(0, 0, 0)
+scale_min = 5.0
+scale_max = 10.0
+color = Color(0.8, 0.95, 1, 0.6)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_m10ca"]
+radius = 210.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_health_bg"]
+bg_color = Color(0.2, 0.2, 0.2, 0.8)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_health_fill"]
+bg_color = Color(0.94902, 0.262745, 0.137255, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[node name="EnemyShip" type="Area2D"]
+script = ExtResource("1_abefa")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+rotation = -3.14159
+scale = Vector2(0.22, 0.22)
+texture = ExtResource("1_tryvq")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+rotation = -3.14159
+polygon = PackedVector2Array(88, 19, 29, 20, 22, 20, 9, 20, 3, 21, -34, 21, -55, 18, -80, 12, -98, 3, -98, -4, -80, -14, -56, -21, -34, -25, 2, -27, 9, -26, 21, -26, 27, -27, 87, -27, 87, -19, 95, -19, 96, 10, 88, 11)
+
+[node name="EnemyTurret" type="Node2D" parent="."]
+position = Vector2(-80, -1)
+script = ExtResource("2_iliux")
+
+[node name="TurretBody" type="Sprite2D" parent="EnemyTurret"]
+position = Vector2(2.58105, -0.625)
+scale = Vector2(0.05, 0.05)
+texture = ExtResource("2_icetq")
+
+[node name="TurretBarrel" type="Sprite2D" parent="EnemyTurret"]
+position = Vector2(-9.41895, 4.375)
+rotation = 1.5708
+scale = Vector2(0.03003, 0.0350988)
+texture = ExtResource("3_h1uny")
+
+[node name="WakeEffect" type="GPUParticles2D" parent="."]
+position = Vector2(-96, -7)
+rotation = -3.14159
+amount = 100
+process_material = SubResource("ParticleProcessMaterial_vdypn")
+lifetime = 1.5
+preprocess = 0.5
+
+[node name="WakeEffect2" type="GPUParticles2D" parent="."]
+position = Vector2(-96, 15)
+rotation = -3.14159
+amount = 100
+process_material = SubResource("ParticleProcessMaterial_vdypn")
+lifetime = 1.5
+preprocess = 0.5
+
+[node name="DetectionArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionArea"]
+visible = false
+position = Vector2(76, -12)
+scale = Vector2(3.805, 3.805)
+shape = SubResource("CircleShape2D_m10ca")
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+
+[node name="HealthBar" type="ProgressBar" parent="."]
+custom_minimum_size = Vector2(100, 10)
+offset_left = -50.0
+offset_top = -80.0
+offset_right = 50.0
+offset_bottom = -70.0
+theme_override_styles/background = SubResource("StyleBoxFlat_health_bg")
+theme_override_styles/fill = SubResource("StyleBoxFlat_health_fill")
+max_value = 50.0
+value = 50.0
+show_percentage = false

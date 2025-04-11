@@ -1,0 +1,79 @@
+[gd_scene load_steps=6 format=3 uid="uid://srx12mhjd6fd"]
+
+[ext_resource type="Script" path="res://scripts/game_over.gd" id="1_thl5j"]
+[ext_resource type="Texture2D" uid="uid://bmok4ccxnhsg6" path="res://assets/sea_bg_7.png" id="2_ldm8w"]
+
+[sub_resource type="FontVariation" id="FontVariation_xrshj"]
+variation_embolden = 0.6
+
+[sub_resource type="FontVariation" id="FontVariation_piofw"]
+variation_embolden = 0.5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_u3exh"]
+bg_color = Color(0.12549, 0.12549, 0.12549, 0.839216)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+shadow_color = Color(0, 0, 0, 0.270588)
+shadow_size = 5
+
+[node name="GameOver" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_thl5j")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 0
+offset_right = 1152.0
+offset_bottom = 648.0
+texture = ExtResource("2_ldm8w")
+stretch_mode = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -200.0
+offset_right = 300.0
+offset_bottom = 200.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 30
+alignment = 1
+
+[node name="GameOverLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = SubResource("FontVariation_xrshj")
+theme_override_font_sizes/font_size = 80
+text = "GAME OVER"
+horizontal_alignment = 1
+
+[node name="SurvivalTimeLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = SubResource("FontVariation_piofw")
+theme_override_font_sizes/font_size = 32
+text = "You survived for: 00:00"
+horizontal_alignment = 1
+
+[node name="Spacer" type="Control" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+
+[node name="RestartButton" type="Button" parent="VBoxContainer"]
+custom_minimum_size = Vector2(250, 70)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = SubResource("StyleBoxFlat_u3exh")
+text = "Return to Title Screen"
+
+[connection signal="pressed" from="VBoxContainer/RestartButton" to="." method="_on_restart_button_pressed"]
