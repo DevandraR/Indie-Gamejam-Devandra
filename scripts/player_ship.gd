@@ -120,6 +120,10 @@ func update_hud():
 	if hud:
 		hud.update_health(current_health, max_health)
 		hud.update_energy(current_energy, max_energy)
+		# Update ammo display
+		var turret = get_node_or_null("Turret")
+		if turret:
+			hud.update_ammo(turret.get_special_ammo(), turret.get_max_special_ammo())
 
 # Add take_damage function
 func take_damage(amount):

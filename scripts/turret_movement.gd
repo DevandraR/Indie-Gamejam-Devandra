@@ -2,19 +2,30 @@ extends Node2D
 
 @onready var turret_barrel = $TurretBarrel
 @onready var bullet_scene = $Bullet  # Reference to the bullet scene for duplication
+var special_bullet_scene = preload("res://scenes/SpecialBullet.tscn")  # Special bullet
 
 # Line properties
 var draw_aim_line = true
 var dot_spacing = 15
 var dot_size = 3
 var line_color = Color(1, 0, 0, 0.5)  # Semi-transparent red
+var special_line_color = Color(1, 0.5, 0, 0.7)  # Orange for special bullets
 var max_distance = 1000  # Maximum line length
 
 # Shooting properties
 var can_shoot = true
+var can_shoot_special = true
 var shoot_cooldown = 0.5  # Time between shots
+var special_shoot_cooldown = 2.0  # Longer cooldown for special bullets
 var bullet_speed = 800    # How fast bullets travel
+var special_bullet_speed = 600
 var can_fire_now = true   # Whether currently pointing in a valid direction
+
+# Special ammo system
+var special_ammo = 10
+var max_special_ammo = 10
+var ammo_regen_time = 8.0  # Seconds to regenerate 1 special ammo
+var ammo_timer = 0.0
 
 # Target position for the bullet to reach
 var target_position = Vector2.ZERO
@@ -33,6 +44,14 @@ func _ready():
     set_process(true)
 
 func _process(delta):
+    # Regenerate special ammo over time
+    if special_ammo < max_special_ammo:
+        ammo_timer += delta
+        if ammo_timer >= ammo_regen_time:
+            ammo_timer = 0.0
+            special_ammo += 1
+            print("Special ammo regenerated: " + str(special_ammo) + "/" + str(max_special_ammo))
+
     # Get global mouse position
     var mouse_pos = get_global_mouse_position()
     
@@ -57,11 +76,15 @@ func _process(delta):
     
     # Check for shooting input
     if Input.is_action_just_pressed("ui_accept") or Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
-        if can_fire_now:
+        if can_fire_now and can_shoot:
             shoot()
         else:
             # Optionally: play a "can't shoot" sound or show a visual indication
             print("Cannot fire! Turret pointing at ship.")
+
+    elif Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
+        if can_fire_now and can_shoot_special and special_ammo > 0:
+            shoot_special()
 
 # Check if the turret is pointing in a valid direction
 func check_firing_arc():
@@ -183,3 +206,37 @@ func _on_Bullet_area_entered(area, bullet):
     if area.is_in_group("enemies"):
         print("Hit enemy!")
         explode_bullet(bullet)
+
+func shoot_special():
+    if not can_shoot_special or special_ammo <= 0:
+        return
+    
+    # Use special ammo
+    special_ammo -= 1
+    print("Special shot fired! Ammo remaining: " + str(special_ammo))
+    
+    var new_bullet = special_bullet_scene.instantiate()
+    get_tree().root.add_child(new_bullet)
+    
+    var barrel_end = global_position + Vector2(turret_barrel.position.x, 0).rotated(rotation)
+    new_bullet.global_position = barrel_end
+
+    # SET SHOOTER REFERENCE 
+    new_bullet.shooter = get_parent()  # Player ship sebagai shooter
+    
+    var direction = (target_position - barrel_end).normalized()
+    new_bullet.velocity = direction * special_bullet_speed
+    new_bullet.rotation = direction.angle() + PI/2
+    new_bullet.target_position = target_position
+    new_bullet.speed = special_bullet_speed
+    
+    can_shoot_special = false
+    await get_tree().create_timer(special_shoot_cooldown).timeout
+    can_shoot_special = true
+
+# Get special ammo info for HUD
+func get_special_ammo():
+    return special_ammo
+
+func get_max_special_ammo():
+    return max_special_ammo

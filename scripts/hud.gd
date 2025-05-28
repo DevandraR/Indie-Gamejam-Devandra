@@ -3,10 +3,12 @@ extends CanvasLayer
 @onready var health_bar = $MarginContainer/VBoxContainer/HealthBarContainer/HealthBar
 @onready var energy_bar = $MarginContainer/VBoxContainer/EnergyBarContainer/EnergyBar
 @onready var timer_label = $MarginContainer/VBoxContainer/TimerLabel
+@onready var ammo_label = $MarginContainer/VBoxContainer/AmmoContainer/AmmoLabel
 
 func _ready():
 	update_health(100, 100)  # Initialize health bar at full
 	update_energy(100, 100)
+	update_ammo(10, 10)
 
 func _process(_delta):
 	update_timer()
@@ -39,6 +41,9 @@ func update_energy(current_energy, max_energy):
 		bar_style.bg_color = Color(0.9, 0.7, 0.1)  # Yellow when medium
 	else:
 		bar_style.bg_color = Color(0.1, 0.5, 0.9)  # Blue when high
+
+func update_ammo(current_ammo, max_ammo):
+	ammo_label.text = "Special Ammo: " + str(current_ammo) + "/" + str(max_ammo)
 
 func update_timer():
 	if has_node("/root/GameManager"):

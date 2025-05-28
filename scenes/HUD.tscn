@@ -84,3 +84,11 @@ theme_override_styles/background = SubResource("StyleBoxFlat_bg")
 theme_override_styles/fill = SubResource("StyleBoxFlat_energy_fill")
 value = 100.0
 show_percentage = false
+
+[node name="AmmoContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="AmmoLabel" type="Label" parent="MarginContainer/VBoxContainer/AmmoContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Special Ammo : 10/10"
